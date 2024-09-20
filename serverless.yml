@@ -1,0 +1,30 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: proclivity
+# "app" enables Serverless Framework Dashboard features and sharing them with other Services.
+app: bike-data-app
+# "service" is the name of this project. This will also be added to your AWS resource names.
+service: aws-glue-bike-data-etl-job
+
+provider:
+  name: aws
+  runtime: python3.12
+  region: us-east-2   # Specify your AWS region
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - s3:GetObject
+        - s3:ListBucket
+      Resource: arn:aws:s3:::aws-glue-bike-data-activity-file-upload/*
+    - Effect: Allow
+      Action:
+        - glue:StartJobRun
+      Resource: arn:aws:glue:us-east-2:<aws-account-number>:job/garmin_etl_job
+
+functions:
+  handler:
+      handler: src/handler.handler
+      events:
+      - s3:
+          bucket: aws-glue-bike-data-activity-file-upload
+          event: s3:ObjectCreated:*
+          existing: true
