@@ -41,7 +41,7 @@ Which should result in response similar to the following:
 You can invoke your function locally by using the following command:
 
 ```
-serverless invoke local --function handler
+serverless invoke local --function handler --path s3Event.json
 ```
 
 Which should result in response similar to the following:
